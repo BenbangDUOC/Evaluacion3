@@ -1,0 +1,151 @@
+import random
+import csv
+import os
+
+goles = []
+equipos = ["USA", "Mexico", "Colombia"]
+def registrar():
+    os.system("cls")
+    try:
+        id = random.randint(100000,999999)
+        while True:
+            nombre = input("Ingrese el nombre del jugador: ")
+            if len(nombre) > 0 and nombre.isdigit() == False:
+                break
+            else:
+                print("\nIngresa un nombre válido\n")
+        while True:
+            nacimiento = input("Ingrese la fecha de nacimiento del jugador: ")
+            if nacimiento.isdigit():
+                nacimiento = int(nacimiento)
+                if nacimiento > 1985:
+                    break
+            else:
+                print("Ingrese correctamente la edad del jugador con valores numéricos")
+        os.system("cls")
+        flag = False
+        while True:
+            usa = input("Ingrese la cantidad de goles emitidos contra USA: ")
+            mex = input("Ingrese la cantidad de goles emitidos contra Mexico: ")
+            col = input("Ingrese la cantidad de goles emitidos contra Colombia: ")
+            if col.isdigit() and usa.isdigit() and mex.isdigit():
+                col = int(col)
+                mex = int(mex)
+                usa = int(usa)
+                if col > -1 and usa > -1 and mex > -1:
+                    suma = usa + mex + col
+                    if (suma//3) > 1:
+                        flag = True
+                        break
+                    else:
+                        print("\n\nEn promedio tienes que anotar al menos 2 goles entre los 3 partidos")
+                        print("No puedes registrar esta bitácora, volviendo al menú...")
+                        return
+            else:
+                print("Ingrese correctamente los goles, recuerde que solo puede colocar números positivos o 0.")
+        if flag:
+            gol = {"id":id,"nombre":nombre,
+                "nacimiento":nacimiento,
+                "equipo": "Chile",
+                "usa":usa,
+                "mex":mex,
+                "col":col}
+            goles.append(gol)
+            os.system("cls")
+            print("*"*20)
+            print(f"Bitacora añadida: \nID: {id}\nJugador: {nombre}")
+            print(f"Año de nacimiento: {nacimiento}. \nEquipo: Chile\n\n")
+    except Exception as ex:
+        os.system("cls")
+        print("*"*20)
+        print(f"Error: {ex}")
+        print("Volviendo al menú...")
+
+def listar():
+    os.system("cls")
+    try:
+        if goles:
+            for i in goles:
+                print(f"\nID: {i["id"]}\nJugador {i["nombre"]}")
+                print(f"Año de nacimiento: {i["nacimiento"]}. \nEquipo: Chile\n\n")
+            while True:
+                opcion = input("Envíe el número 1 para dejar de ver la lista: ")
+                if opcion == "1":
+                    os.system("cls")
+                    return
+        else:
+            print("No tiene goles registrados en la bitacora, primero registre uno.")
+    except Exception as ex:
+        os.system("cls")
+        print("*"*20)
+        print(f"Error: {ex}")
+        print("Volviendo al menú...")
+
+def bitacora():
+    os.system("cls")
+    try:
+        with open("Bitacoras.csv", "w", newline="") as archivo:
+            writer = csv.writer(archivo)
+            writer.writerow(["ID", "Jugador", "Anio de nacimiento", "Equipo", "USA", "Mexico", "Colombia"])
+            for i in goles:
+                writer.writerow([{i["id"]},
+                                {i["nombre"]},
+                                {i["nacimiento"]},
+                                {i["usa"]},
+                                {i["mex"]},
+                                {i["col"]}])
+                print("\n")
+            print("Archivo Bitacoras.csv creado con éxito...")
+
+    except Exception as ex:
+        os.system("cls")
+        print("*"*20)
+        print(f"Error: {ex}")
+        print("Volviendo al menú...")
+
+def buscar():
+    os.system("cls")
+    try:
+        while True:
+            opcion = input("Ingrese el ID de la bitacora a buscar: ")
+            if opcion.isdigit():
+                opcion = int(opcion)
+                for i in goles:
+                    if i["id"] == opcion:
+                        print(f"Bitacora encontrada: \nID: {i["id"]}\nJugador {i["nombre"]}")
+                        print(f"Año de nacimiento: {i["nacimiento"]}. \nEquipo: Chile\n\n")
+                        return
+                print("\nNo se ha encontrado la ID de la bitacora en el sistema.")
+                return
+    except Exception as ex:
+        os.system("cls")
+        print("*"*20)
+        print(f"Error: {ex}")
+        print("Volviendo al menú...")
+
+def main():
+    try:
+        while True:
+            print("*"*20, "\nMenú del programa\n\n1) Registrar bitácora de goles")
+            print("2) Listar todas las hojas de bitacoras\n3) Imprimir hoja de bitacoras")
+            opcion = input("4) Buscar bitacora por ID\n5) Salir del programa\n\nIngrese una opción: ")
+            if opcion == "1":
+                registrar()
+            elif opcion == "2":
+                listar()
+            elif opcion == "3":
+                bitacora()
+            elif opcion == "4":
+                buscar()
+            elif opcion == "5":
+                os.system("cls")
+                print("Saliendo del programa, vuelva pronto...")
+                return
+            else:
+                print("Ingrese una opción válida.")
+    except Exception as ex:
+        print(f"Error: {ex}")
+
+if __name__ == "__main__":
+    main()
+
